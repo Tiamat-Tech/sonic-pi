@@ -112,6 +112,8 @@ MainWindow::MainWindow(QApplication& app, QSplashScreen* splash)
 
     printAsciiArtLogo();
 
+    QApplication::instance()->setAttribute(Qt::AA_DontShowIconsInMenus, true);
+
     this->splash = splash;
 
     // API and Client
@@ -133,7 +135,7 @@ MainWindow::MainWindow(QApplication& app, QSplashScreen* splash)
     show_rec_icon_a = false;
     restoreDocPane = false;
     focusMode = false;
-    version = "4.5.1";
+    version = "5.0.0";
     latest_version = "";
     version_num = 0;
     latest_version_num = 0;
@@ -3839,43 +3841,43 @@ void MainWindow::createToolBar()
     //Accessibility shortcuts
 
     //Focus Editor
-    focusEditorAct = new QAction(theme->getHelpIcon(false), tr("Focus Editor"), this);
+    focusEditorAct = new QAction(tr("Focus Editor"), this);
     connect(focusEditorAct, SIGNAL(triggered()), this, SLOT(focusEditor()));
 
     //Focus Logs
-    focusLogsAct = new QAction(theme->getHelpIcon(false), tr("Focus Logs"), this);
+    focusLogsAct = new QAction(tr("Focus Logs"), this);
     connect(focusLogsAct, SIGNAL(triggered()), this, SLOT(focusLogs()));
 
     //Focus Context
-    focusContextAct = new QAction(theme->getHelpIcon(false), tr("Focus Context"), this);
+    focusContextAct = new QAction(tr("Focus Context"), this);
     connect(focusContextAct, SIGNAL(triggered()), this, SLOT(focusContext()));
 
     //Focus Cues
-    focusCuesAct = new QAction(theme->getHelpIcon(false), tr("Focus Cues"), this);
+    focusCuesAct = new QAction(tr("Focus Cues"), this);
     connect(focusCuesAct, SIGNAL(triggered()), this, SLOT(focusCues()));
 
     //Focus Preferences
-    focusPreferencesAct = new QAction(theme->getHelpIcon(false), tr("Focus Preferences"), this);
+    focusPreferencesAct = new QAction(tr("Focus Preferences"), this);
     connect(focusPreferencesAct, SIGNAL(triggered()), this, SLOT(focusPreferences()));
 
     //Focus HelpListing
-    focusHelpListingAct = new QAction(theme->getHelpIcon(false), tr("Focus Help Listing"), this);
+    focusHelpListingAct = new QAction(tr("Focus Help Listing"), this);
     connect(focusHelpListingAct, SIGNAL(triggered()), this, SLOT(focusHelpListing()));
 
     //Focus HelpDetails
-    focusHelpDetailsAct = new QAction(theme->getHelpIcon(false), tr("Focus Help Details"), this);
+    focusHelpDetailsAct = new QAction(tr("Focus Help Details"), this);
     connect(focusHelpDetailsAct, SIGNAL(triggered()), this, SLOT(focusHelpDetails()));
 
     //Focus Errors
-    focusErrorsAct = new QAction(theme->getHelpIcon(false), tr("Focus Errors"), this);
+    focusErrorsAct = new QAction(tr("Focus Errors"), this);
     connect(focusErrorsAct, SIGNAL(triggered()), this, SLOT(focusErrors()));
 
     //Focus BPM SCrubber
-    focusBPMScrubberAct = new QAction(theme->getHelpIcon(false), tr("Focus BPM Scrubber"), this);
+    focusBPMScrubberAct = new QAction(tr("Focus BPM Scrubber"), this);
     connect(focusBPMScrubberAct, SIGNAL(triggered()), this, SLOT(focusBPMScrubber()));
 
     //Focus Time Warp Scrubber
-    focusTimeWarpScrubberAct = new QAction(theme->getHelpIcon(false), tr("Focus TimeWarp Scrubber"), this);
+    focusTimeWarpScrubberAct = new QAction(tr("Focus TimeWarp Scrubber"), this);
     connect(focusTimeWarpScrubberAct, SIGNAL(triggered()), this, SLOT(focusTimeWarpScrubber()));
 
     showLogAct = new QAction(tr("Show Log"), this);
@@ -4672,12 +4674,19 @@ void MainWindow::setUpdateInfoText(QString t)
 
 void MainWindow::addUniversalCopyShortcuts(QTextEdit* te)
 {
-    new QShortcut(ctrlKey("c"), te, SLOT(copy()));
-    new QShortcut(ctrlKey("a"), te, SLOT(selectAll()));
+    QShortcut* copyShortcutCtrl = new QShortcut(ctrlKey("c"), te, SLOT(copy()));
+    copyShortcutCtrl->setContext(Qt::WidgetShortcut);
 
-    new QShortcut(metaKey("c"), te, SLOT(copy()));
-    new QShortcut(metaKey("a"), te, SLOT(selectAll()));
+    QShortcut* selectAllShortcutCtrl = new QShortcut(ctrlKey("a"), te, SLOT(selectAll()));
+    selectAllShortcutCtrl->setContext(Qt::WidgetShortcut);
+
+    QShortcut* copyShortcutMeta = new QShortcut(metaKey("c"), te, SLOT(copy()));
+    copyShortcutMeta->setContext(Qt::WidgetShortcut);
+
+    QShortcut* selectAllShortcutMeta = new QShortcut(metaKey("a"), te, SLOT(selectAll()));
+    selectAllShortcutMeta->setContext(Qt::WidgetShortcut);
 }
+
 
 QString MainWindow::asciiArtLogo()
 {
